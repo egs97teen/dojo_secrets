@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Main Page</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'secrets_app/css/main.css' %}">
+    </head>
+    <header>
+        <h1>Welcome {{name}}!</h1>
+        <a href='{% url "logout" %}'>Log Out</a>
+        <a href='{% url "my_likes" %}'>My Likes</a>
+        <a href='{% url "my_unlikes" %}'>My Unlikes</a>
+    </header>
+    <body>
+    <div id="errors">
+        {% if messages  %}
+            {% for message in messages %}
+                <p>{{message}}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div id="secrets">
+        <form action='{% url "secret" %}' method='POST'>
+            {% csrf_token %}
+            <textarea name ='secret_post' class='secret_post'></textarea>
+            <input type='submit' value='Post'>
+        </form>
+        <a href='{% url "popular" %}'>Most Popular Secrets</a>
+        <h1>Recent Secrets...</h1>
+        {% for secret in secrets %}
+            <p>{{secret.content}}</p>
+            <p>({{secret.created_at|timesince}} ago)</p>
+            <p>{{secret.likes.count}} likes</p>
+            {% if secret in liked %}
+                <p>You already liked this post</p>
+            {% else %}
+                <a href='{% url "like" secret.id %}'>Like</a>
+            {% endif %}
+            {% if secret.secret_user.id == user %}
+            <form action='{% url "delete" secret.id %}' method='POST'>
+                {% csrf_token %}
+                <input type='submit' value='Delete'>
+            </form>
+            {%endif%}
+        {% endfor %}
+    </div>
+    </body>
+</html>
+

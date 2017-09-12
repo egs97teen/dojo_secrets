@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My Uncreated and Not Liked</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'secrets_app/css/my_unlikes.css' %}">
+    </head>
+    <header>
+        <a href='{% url "logout" %}'>Log Out</a>
+        <a href='{%url "main" %}'>Back</a>
+    </header>
+    <body>
+    <h1>Not My Secrets or Liked Stuff</h1>
+    <div id="secrets">
+     {% for secret in secrets %}
+        <p>{{secret.content}}</p>
+        <p>({{secret.created_at|date:"F d, Y, f A"}})</p>
+        <p>{{secret.likes.count}} likes</p>
+        <a href='/like/{{secret.id}}'>Like</a>
+        {% endfor %}
+    </div>
+    </body>
+</html>
